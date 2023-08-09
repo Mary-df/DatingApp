@@ -10,9 +10,12 @@ builder.Services.AddDbContext<DataContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 
-var app = builder.Build();
+builder.Services.AddCors();
 
-app.UseHttpsRedirection();
-app.UseAuthorization();
+var app = builder.Build();
+//middleweare ed è molto importante dove si posiziona
+//solitamente prima dei controller
+app.UseCors(builder => builder.AllowAnyHeader().AllowAnyMethod().WithOrigins("https://localhost:4200"));
+
 app.MapControllers();
 app.Run();
