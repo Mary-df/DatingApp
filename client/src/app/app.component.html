@@ -1,6 +1,8 @@
 <app-nav></app-nav>
 <div class="container" style="margin-top: 100px;">
-    <app-home></app-home>
+    <!-- <app-home></app-home>  Questo va via dopo aver inserito il router perchè viene 
+    sostituito da tag seguente che indica il punto di apertura del componente -->
+    <router-outlet></router-outlet>
     <!-- <ul>
         <li *ngFor="let user of users">{{user.id}} - {{user.userName}}</li>
     </ul> -->
