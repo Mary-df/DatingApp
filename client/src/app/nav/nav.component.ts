@@ -44,7 +44,8 @@ export class NavComponent implements OnInit {
   login() {
     this.accountService.login(this.model).subscribe({
       next: _ => this.router.navigateByUrl('/members'),
-      error: error => this.toast.error(error.error),
+      //error: error => this.toast.error(error.error),
+      //qui posso togliere gli errori perchè ora lo gestimo con gli interceptor
     })
   }
 

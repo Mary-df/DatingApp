@@ -1,12 +1,5 @@
-using System.Text;
-using API.Data;
 using API.Extensions;
-using API.Interfaces;
-using API.Services;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
+using API.Middleware;
 
 internal class Program
 {
@@ -47,6 +40,9 @@ internal class Program
         builder.Services.AddSwaggerGen();
 
         var app = builder.Build();
+        //middleweare che gestisce gli errori
+        //<ExceptionMiddleware> è il nome del file del middleware che ho appe creato
+        app.UseMiddleware<ExceptionMiddleware>();
         //middleweare ed è molto importante dove si posiziona
         //solitamente prima dei controller
         app.UseCors(builder => builder.AllowAnyHeader().AllowAnyMethod().WithOrigins("https://localhost:4200"));

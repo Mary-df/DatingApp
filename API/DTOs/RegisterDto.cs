@@ -6,7 +6,9 @@ namespace API.DTOs
     {
         [Required]
         public string Username { get; set; }
-        [Required]
+
+        [Required] //indica il parametro obligatorio
+        [StringLength(8, MinimumLength = 4)] //indica la linghezza massiama e minima della stinga
         public string Password { get; set; }
     }
 }
