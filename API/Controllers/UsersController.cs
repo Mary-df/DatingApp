@@ -1,5 +1,7 @@
-using API.Data;
+using API.DTOs;
 using API.Entities;
+using API.Interfaces;
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -11,17 +13,20 @@ namespace API.Controllers
     //siccome abbiamo creato una classe per le api con tutte 
     //le attività di base da fare i controller no esstenderannò più ControllerBase
     //ma BaseApiController appena creato
-    
+
     [Authorize]
     public class UsersController : BaseApiController
     {
-        private readonly DataContext _context;
+        private readonly IUserRepository _userRepository;
+        private readonly IMapper _mapper;
 
-        public UsersController(DataContext context)
+        public UsersController(IUserRepository userRepository, IMapper mapper)
         {
             //this._context = context;
             //il this si può omettere
-            _context = context;
+            //Una volta creato il repositori togliamo il context e lasciamo il repository
+            _userRepository = userRepository;
+            _mapper = mapper;
         }
 
         //SINCONO
@@ -42,17 +47,34 @@ namespace API.Controllers
         } */
 
         //ASINCRONO
-        [AllowAnonymous] //questi sono middleware
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<AppUser>>> GetUsers()
-        { 
-            return await _context.Users.ToListAsync();
-        }
+        //[AllowAnonymous] 
+        //AllowAnonymous lo tolgo perchè non voglio assolutamente che una persona non loggata
+        //possa avere l'elenco degli utenti o un singolo utente
+        [HttpGet] //questi sono middleware
+        public async Task<ActionResult<IEnumerable<MemberDto>>> GetUsers()
+        {   //SENZA MAPPATORE
+            //con l'aggiunta del map questo va tolto e divente
+             //return Ok(await _userRepository.GetUsersAsync());
+             //var users = await _userRepository.GetUsersAsync();
+             //var userToReturn = _mapper.Map<IEnumerable<MemberDto>>(users);
+             //vado a mappare una lista di utenti in una lista di oggetti questo
+             //è utile quando si vogliono trasformare o nascondere alcune informazioni
+             //prima di restituire al cliente
+             //return Ok(userToReturn); //restituisco una risposta http con status 200 e la lista di utenti
+
+            //CON IL MAPPATORE
+            return Ok(await _userRepository.GetMembersAsync());
+       }
 
         //ASINCRONO
-        [HttpGet("{id}")]
-        public async Task<ActionResult<AppUser>> GetUser(int id){
-            return await _context.Users.FindAsync(id);
+        [HttpGet("{username}")] 
+        //qui cambio Task<ActionResult<AppUser>> con Task<ActionResult<MamberDto>> perchè ci sono delle info che voglio nascondere
+        public async Task<ActionResult<MemberDto>> GetUser(string username){
+            //togliamo la mappatura perchè lo facciamo direttamenter nel repository usando memberDto
+            //var user = await  _userRepository.GetUserByUsernameAsync(username);
+            //otteniamo il nome dello user e lo salviamo nella variabile user
+            //return _mapper.Map<MemberDto>(user);
+            return await _userRepository.GetMemberAsync(username);
         }
 
     }

@@ -1,5 +1,5 @@
-using System.Reflection.Metadata.Ecma335;
 using API.Data;
+using API.Helpers;
 using API.Interfaces;
 using API.Services;
 using Microsoft.EntityFrameworkCore;
@@ -22,7 +22,9 @@ namespace API.Extensions
             services.AddCors();
 
             services.AddScoped<ITokenService, TokenServices>();
-
+            services.AddScoped<IUserRepository, UserRepository>();
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());//aggiungo il mappatore autopatico
+            
             return services;
         }
     }

@@ -1,9 +1,11 @@
+using API.Data;
 using API.Extensions;
 using API.Middleware;
+using Microsoft.EntityFrameworkCore;
 
-internal class Program
+class Program
 {
-    private static void Main(string[] args)
+    static async Task Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
         //build ti fa aggiungere i servizi di ef o creati da te
@@ -57,6 +59,21 @@ internal class Program
         }
 
         app.MapControllers();
+        using var scope = app.Services.CreateScope();
+        var services = scope.ServiceProvider;
+        try
+        {
+            var context = services.GetRequiredService<DataContext>();
+            await context.Database.MigrateAsync();
+            await Seed.SeedUsers(context);
+        }
+        catch (Exception ex)
+        {
+             var logger = services.GetRequiredService<ILogger<Program>>();
+             logger.LogError(ex, "errore durante la migrazione");
+        }
+
+
         app.Run();
     }
 }
