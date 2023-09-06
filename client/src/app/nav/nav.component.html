@@ -4,7 +4,7 @@
     <ul class="navbar-nav me-auto mb-2 mb-md-0">
       <ng-container class="text-light" *ngIf="accountService.currentUser$| async">
         <li class="nav-item">
-          <a class="nav-link text-light" aria-current="page" routerLink="/members" routerLinkActive="active">Matches</a>
+          <a class="nav-link text-light" routerLink="/members" routerLinkActive="active">Matches</a>
         </li>
         <li class="nav-item">
           <a class="nav-link text-light" [routerLink]="['lists']" routerLinkActive="active">Lists</a>

@@ -1,6 +1,6 @@
-import { HttpClient } from '@angular/common/http';
+//import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { environment } from 'src/environments/environment.development';
+//import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-home',
@@ -11,23 +11,24 @@ export class HomeComponent implements OnInit {
   registerMode = false;
   users: any;
 
-  constructor(private http: HttpClient) { }
+  constructor(/* private http: HttpClient */) { }
 
   ngOnInit(): void {
-    this.getUsers()
+    //this.getUsers()
   }
 
   registerToggle() {
     this.registerMode = !this.registerMode;
   }
 
+  /* lo tolgo perchè l'ho messo in members 
   getUsers() {
     this.http.get(environment.apiUrl + 'users').subscribe({
       next: response => this.users = response,
       error: error => console.log(error),
       complete: () => console.log('Completato'),
     }); //ritorna un observable
-  }
+  } */
 
   cancelRegistrMode(event: boolean) {
     this.registerMode = event;
