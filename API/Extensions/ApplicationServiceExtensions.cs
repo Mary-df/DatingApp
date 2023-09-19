@@ -24,6 +24,8 @@ namespace API.Extensions
             services.AddScoped<ITokenService, TokenServices>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());//aggiungo il mappatore autopatico
+            services.Configure<CloudinarySettings>(config.GetSection("CloudinarySettings"));
+            services.AddScoped<IPhotoService, PhotoService>();
             
             return services;
         }

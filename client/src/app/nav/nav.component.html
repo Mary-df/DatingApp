@@ -18,9 +18,10 @@
       </li>
     </ul>
     <div class="dropdown" *ngIf="accountService.currentUser$| async as user" ngbDropdown>
-      <a class="nav-link text-light" role="button" ngbDropdownToggle>Welcome {{user.username | titlecase}}</a>
+      <img src="{{user.photoUrl || './assets/user.png'}}" alt="user photo">
+      <a class="nav-link text-light ms-2" role="button" ngbDropdownToggle>Welcome {{user.username | titlecase}}</a>
       <div class="dropdown-menu" ngbDropdownMenu>
-        <a class="dropdown-item" [routerLink]="['member/edit']" ngbDropdownItem>Edit Profile</a>
+        <a class="dropdown-item" routerLink="/member/edit" ngbDropdownItem>Edit Profile</a>
         <a class="dropdown-item btn" (click)="logout()" ngbDropdownItem>Logout</a>
       </div>
     </div>

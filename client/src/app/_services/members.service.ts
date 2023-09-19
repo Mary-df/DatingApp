@@ -40,6 +40,10 @@ export class MembersService {
     );
   }
 
+  setMainPhoto(photoId: number) {
+    return this.http.put(this.baseUrl + 'users/set-main-photo', photoId, {});
+  }
+
   /* QUESTO VA TOLTO E MODIFICATO COME SOPRA PERCHE' ABBIAMO AGGIUNTO
     INTERCEPTOR JWT
   getMembers() {

@@ -31,6 +31,8 @@ export class ErrorInterceptor implements HttpInterceptor {
                 throw modelStateErrors.flat();
               } else {
                 this.toastr.error(error.error, error.status.toString());
+              console.log('sono nell else 400');
+              
               }
               break;
             case 401:

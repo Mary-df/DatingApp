@@ -1,6 +1,7 @@
 using System.Security.Claims;
 using API.DTOs;
 using API.Entities;
+using API.Extensions;
 using API.Interfaces;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
@@ -22,14 +23,15 @@ namespace API.Controllers
     {
         private readonly IUserRepository _userRepository;
         private readonly IMapper _mapper;
-
-        public UsersController(IUserRepository userRepository, IMapper mapper)
+        private readonly IPhotoService _photoService;
+        public UsersController(IUserRepository userRepository, IMapper mapper, IPhotoService photoService)
         {
             //this._context = context;
             //il this si può omettere
             //Una volta creato il repositori togliamo il context e lasciamo il repository
             _userRepository = userRepository;
             _mapper = mapper;
+            _photoService = photoService;
         }
 
         //SINCONO
@@ -84,8 +86,10 @@ namespace API.Controllers
         [HttpPut]
         public async Task<ActionResult> UpdateUser(MemberUpdateDto memberUpdateDto)
         {
-            var username = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            var user = await _userRepository.GetUserByUsernameAsync(username);
+            //var username = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            //FindFirst(ClaimTypes.NameIdentifier)?.Value; 
+            //      -> lo spostiamo in ClaimsPrincipal in getUsername
+            var user = await _userRepository.GetUserByUsernameAsync(User.GetUsername());
             if (user == null) return NotFound();
 
             _mapper.Map(memberUpdateDto, user);
@@ -94,5 +98,55 @@ namespace API.Controllers
             return BadRequest("Aggiornamento utente fallito");
         }
 
+        [HttpPost("add-photo")]
+        public async Task<ActionResult<PhotoDto>> AddPhoto(IFormFile file)
+        {
+            var user = await _userRepository.GetUserByUsernameAsync(User.GetUsername());
+
+            if (user == null) return NotFound();
+
+            var result = await _photoService.AddPhotoAsync(file);
+
+            if(result.Error != null) return BadRequest(result.Error.Message);
+
+            var photo = new Photo
+            {
+                Url = result.SecureUrl.AbsoluteUri,
+                PublicId = result.PublicId,
+            };
+
+            if(user.Photos.Count == 0) photo.IsMain = true;
+            user.Photos.Add(photo);
+
+
+            if(await _userRepository.SaveAllAsync())
+            {
+                return CreatedAtAction( nameof(GetUser), new { username = user.UserName }, _mapper.Map<PhotoDto>(photo) );
+            //CreatedAtAction --> ritorna uno Status 201
+            //nameof(GetUser) -> nome del metodo da andare a prendere
+            // new { username = user.UserName } -> il nuovo parametro da passare all'oggetto
+            // _mapper.Map<PhotoDto>(photo) -> per le foto 
+            }
+
+            return BadRequest("Problem adding photo");
+        }
+
+        [HttpPut("set-main-photo/{photoId}")]
+        public async Task<ActionResult> SetMainPhoto(int photoId)
+        {
+            var user = await _userRepository.GetUserByUsernameAsync(User.GetUsername());
+            if(user == null) return NotFound();
+            var photo = user.Photos.FirstOrDefault(x => x.Id == photoId);
+            if(photo == null) return NotFound();
+            if(photo.IsMain) return BadRequest("la foto scelta è già una foto principale");
+            var currentMain = user.Photos.FirstOrDefault(x => x.IsMain);
+            if(currentMain != null) currentMain.IsMain = false;
+            photo.IsMain = true;
+
+            if(await _userRepository.SaveAllAsync()) return  NoContent();
+            return BadRequest("Problem setting the main photo");
+        }
+
+        
     }
 }

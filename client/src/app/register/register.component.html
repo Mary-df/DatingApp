@@ -1,10 +1,10 @@
-<form #registerForm="ngForm" (ngSubmit)="register()">
+<!-- <form #registerForm="ngForm" (ngSubmit)="register()">
     <h2 class="text-center text-primary">Sing up</h2>
     <hr>
     <div>
         <input type="text" class="from-control" name="username" [(ngModel)]="model.username" placeholder="Username">
     </div>
-    <!-- <div class="mb-3">
+    apri commento <div class="mb-3">
         <label>Chi è il tuo utente preferito?</label>
         <select class="form-select" aria-label="Default select example">
             <option selected>Scegli</option>
@@ -12,7 +12,7 @@
                 {{ user.userName }}
             </option>
         </select>
-    </div> -->
+    </div> chiudi commento
     <div class="mb-3">
         <input type="password" class="from-control" name="password" [(ngModel)]="model.password" placeholder="Password">
     </div>
@@ -20,4 +20,75 @@
         <button class="btn btn-success me-2" type="submit">Register</button>
         <button class="btn btn-default" type="button" (click)="cancel()">Cancel</button>
     </div>
+</form> -->
+
+
+
+<!--FORM REATTIVO-->
+<form [formGroup]="registerForm" (ngSubmit)="registerForm.valid && register()">
+    <h2 class="text-center text-primary">Sing up</h2>
+    <hr>
+    <!--<div>
+        <input type="text" class="form-control" formControlName="username" placeholder="Username"
+            [class.is-invalid]="registerForm.get('username')?.errors && registerForm.get('username')?.touched">
+        <div class="invalid-feedback">campo bbligatorio</div>
+    </div>
+    <div class="my-3">
+        <input type="password" class="form-control" formControlName="password" placeholder="Password"
+            [class.is-invalid]="registerForm.get('password')?.errors && registerForm.get('password')?.touched">
+        <div class="invalid-feedback" *ngIf="registerForm.get('password')?.hasError('required')">
+            Campo obligatorio
+        </div>
+        <div class="invalid-feedback" *ngIf="registerForm.get('password')?.hasError('minlength')">
+            La password deve avere più di 4 caratteri
+        </div>
+        <div class="invalid-feedback" *ngIf="registerForm.get('password')?.hasError('maxlength')">
+            La password deve avere massimo 8 caratteri
+        </div>
+    </div>
+    <div>
+        <input type="password" class="form-control" formControlName="confirmPassword" placeholder="Confirm Password"
+            [class.is-invalid]="registerForm.get('confirmPassword')?.errors && registerForm.get('confirmPassword')?.touched">
+        <div class="invalid-feedback" *ngIf="registerForm.get('confirmPassword')?.hasError('required')">
+            Campo obligatorio
+        </div>
+        <div class="invalid-feedback" *ngIf="registerForm.get('confirmPassword')?.hasError('notMatching')">
+            La password non corrisponde
+        </div>
+    </div>-->
+    <!--DIVENTA-->
+    <div class="mb-3">
+        <label style="margin-right: 10px;">I am: </label>
+        <label class="form-check-label mx-2">
+            <input type="radio" class="form-check-input" value="male" formControlName="gender"> Male
+        </label>
+        <label class="form-check-label">
+            <input type="radio" class="form-check-input" value="female" formControlName="gender"> Female
+        </label>
+    </div>
+    <app-text-input [formControl]="$any(registerForm.controls['username'])" [label]="'Username'"></app-text-input>
+    <app-text-input [formControl]="$any(registerForm.controls['knownAs'])" [label]="'Know As'"
+        [name]="'username'"></app-text-input>
+    <app-data-picker [formControl]="$any(registerForm.controls['dateOfBirth'])" [label]="'Date of Birth'"
+        [maxDate]="maxDate"></app-data-picker>
+    <app-text-input [formControl]="$any(registerForm.controls['city'])" [label]="'City'"></app-text-input>
+    <app-text-input [formControl]="$any(registerForm.controls['country'])" [label]="'Country'"></app-text-input>
+    <app-text-input [formControl]="$any(registerForm.controls['password'])" [label]="'Password'"
+        [type]="'password'"></app-text-input>
+    <app-text-input [formControl]="$any(registerForm.controls['confirmPassword'])"
+        [label]="'Confirm Password'" [type]="'password'"></app-text-input>
+    <div class="row" *ngIf="validationErrors">
+        <ul class="text-danger">
+            <li *ngFor="let error of validationErrors">
+                {{error}}
+            </li>
+        </ul>
+    </div>
+    <div class="text-center">
+        <button [disabled]="!registerForm.valid" class="btn btn-success me-2 m-3" type="submit">Register</button>
+        <button class="btn btn-outline-secondary" type="button" (click)="cancel()">Cancel</button>
+    </div>
 </form>
+
+<!-- <p>Form value: {{registerForm.value | json}}</p>
+<p>Form status: {{registerForm.status | json}}</p> -->

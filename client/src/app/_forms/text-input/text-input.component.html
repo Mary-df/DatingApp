@@ -1,0 +1,37 @@
+<!--FORM REATTIVO-->
+<div class="my-3">
+    <input 
+        type="{{type}}"
+        [class.is-invalid]="control.touched && control.invalid"
+        class="form-control"
+        [formControl]="control"
+        placeholder="{{label}}"
+    >
+    <div class="invalid-feedback" *ngIf="control.errors?.['required']">
+        Please enter a {{label}}
+    </div>
+    <div class="invalid-feedback" *ngIf="control.errors?.['minlength']">
+        La {{label}} deve avere più di {{control.errors?.['minlength'].requiredLength}} caratteri
+    </div>
+    <div class="invalid-feedback" *ngIf="control.errors?.['maxlength']">
+        La {{label}} deve avere massimo {{control.errors?.['maxlength'].requiredLength}} caratteri.
+    </div>
+    <div class="invalid-feedback" *ngIf="control.errors?.['notMatching']">
+        Le {{label}}s non sono uguali
+    </div>
+</div>
+
+<!--FORM CON IL MODULO-->
+<!-- <div class="my-3">
+    <input type="password" class="form-control" formControlName="password" placeholder="Password"
+        [class.is-invalid]="registerForm.get('password')?.errors && registerForm.get('password')?.touched">
+    <div class="invalid-feedback" *ngIf="registerForm.get('password')?.hasError('required')">
+        Campo obligatorio
+    </div>
+    <div class="invalid-feedback" *ngIf="registerForm.get('password')?.hasError('minlength')">
+        La password deve avere più di 4 caratteri
+    </div>
+    <div class="invalid-feedback" *ngIf="registerForm.get('password')?.hasError('maxlength')">
+        La password deve avere massimo 8 caratteri
+    </div>
+</div> -->

@@ -9,7 +9,7 @@ namespace API.Entities
         public byte[] PasswordSalt { get; set; }
         public DateOnly DateOfBirth { get; set; }
         //DateOnly ci permette di tracciare la data di qualcosa
-        public string KnowAs { get; private set; }
+        public string KnownAs { get; set; }
         public DateTime Created { get; set; } = DateTime.UtcNow;
         public DateTime LastActive { get; set; } = DateTime.UtcNow;
         public string Gender { get; set; }

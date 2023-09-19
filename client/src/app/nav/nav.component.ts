@@ -4,6 +4,7 @@ import { Observable, of } from 'rxjs';
 import { User } from '../_models/user';
 import { Router } from '@angular/router';
 import { ToastrModule, ToastrService } from 'ngx-toastr';
+import { Member } from '../_models/member';
 
 
 @Component({

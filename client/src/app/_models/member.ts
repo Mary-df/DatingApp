@@ -5,14 +5,14 @@ export interface Member {
     userName: string;
     photoUrl: string;
     age: number;
-    knowAs?: any;
+    knownAs?: any;
+    city: string;
     created: string;
     lastActive: string;
     gender: string;
     introduction: string;
     lookingFor: string;
     interests: string;
-    city: string;
     country: string;
     photos: Photo[];
 }
